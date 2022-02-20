@@ -133,7 +133,7 @@ Hooks.once("setup", () => {
     function newRefresh(wrapped, ...args) {
         wrapped(...args);
 
-        if (this.resourceIcons && Number.isInteger(this.data.flags["resource-icons"]?.displayIcons)) this.resourceIcons.visible = this._canViewMode(this.data.flags["resource-icons"].displayIcons);
+        if (this.resourceIcons && this.data.flags["resource-icons"]?.displayIcons) this.resourceIcons.visible = this._canViewMode(this.data.flags["resource-icons"].displayIcons);
         return this;
     }
 
@@ -178,7 +178,7 @@ Hooks.once("setup", () => {
             // Create PIXI sprite using loaded image
             const icon = new PIXI.Sprite(texture);
             // Set sprite dimensions
-            icon.width = icon.height = 0.28 * Math.min(this.w, this.h);
+            icon.width = icon.height = 0.24 * Math.min(this.w, this.h);
             // Set sprite anchor and and position
             icon.anchor.set(0);
             icon.position.set(0);
@@ -230,7 +230,7 @@ Hooks.once("setup", () => {
     CONFIG.Token.objectClass.prototype.updateResourceIconValues = updateResourceIconValues;
     function updateResourceIconValues() {
         if (!this.data.flags["resource-icons"]) return;
-        for (let icon of ["icon1", "icon2", "icon3"]) {
+        for (let icon of ["icon1", "icon2", "icon3", "icon4"]) {
             // Get value of resource for current icon
             const resourceValue = foundry.utils.getProperty(this.actor.data.data, this.data.flags["resource-icons"][icon].resource);
             if (!resourceValue) continue;
@@ -258,7 +258,7 @@ Hooks.once("ready", () => {
         // If current token has no Resource Icon flag data, render template using "blank" default data
         if (!data.object.flags["resource-icons"]) {
             const flagData = {};
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 4; i++) {
                 flagData[`icon${i + 1}`] = {
                     resource: "",
                     img: "",
@@ -281,7 +281,7 @@ Hooks.once("ready", () => {
             data.object.flags["resource-icons"] = flagData;
         }
         // Create array of numbers to render Resource Icon templates
-        data["resource-icons"] = ["1", "2", "3"];
+        data["resource-icons"] = ["1", "2", "3", "4"];
         const snippet = await renderTemplate('modules/resource-icons/templates/resource-icons-HTML.hbs', data);
         // Add rendered HTML to token-config application
         html.find(`.tab[data-tab="resources"`).append(snippet);
@@ -302,7 +302,7 @@ Hooks.once("ready", () => {
 
 // Handlebars helpers that just call core counterparts 
 Handlebars.registerHelper('resource-icons-select', (resource, options) => {
-    return HandlebarsHelpers.select(options.data.root.object.flags["resource-icons"][`icon${resource}`].resource, options);
+    return HandlebarsHelpers.select(options.data.root.object.flags["resource-icons"][`icon${resource}`]?.resource, options);
 });
 
 Handlebars.registerHelper('resource-icons-filePicker', (options) => {
@@ -313,14 +313,16 @@ Handlebars.registerHelper('resource-icons-filePicker', (options) => {
 Handlebars.registerHelper('resource-icons-colorPicker', (options) => {
     const { resource, key } = options.hash;
     options.hash['name'] = `flags.resource-icons.icon${resource}.options.${key}.color`;
-    options.hash['value'] = options.data.root.object.flags["resource-icons"][`icon${resource}`].options[`${key}`].color;
+    options.hash['value'] = options.data.root.object.flags["resource-icons"][`icon${resource}`]?.options[`${key}`]?.color;
     return HandlebarsHelpers.colorPicker(options);
 });
 
 // Handlebars helper that facilitates getting data of current resource icon (in #each block of Resource Icons template)
 Handlebars.registerHelper('resource-icons-getData', (resource, key, options) => {
     let res = options.data.root.object.flags["resource-icons"][`icon${resource}`];
-    const subKeys = key.split(".");
-    subKeys.forEach(s => res = res[s]);
+    if (res) {
+        const subKeys = key.split(".");
+        subKeys.forEach(s => res = res[s]);
+    }
     return res || null;
 });

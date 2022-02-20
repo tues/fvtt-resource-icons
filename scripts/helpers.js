@@ -7,7 +7,7 @@ export function getSetting(key) {
 
 export function containerPosition(currentIconIndex, tokenWidth, tokenHeight) {
     // Icon size based on pixel size of token
-    const iconSize = 0.28 * Math.min(tokenWidth, tokenHeight);
+    const iconSize = 0.25 * Math.min(tokenWidth, tokenHeight);
     // Icon position based on iconPosition module setting
     const iconPosition = getSetting("iconPosition");
     const iconAlignment = getSetting("iconAlignment");
@@ -15,8 +15,8 @@ export function containerPosition(currentIconIndex, tokenWidth, tokenHeight) {
     let x, y;
     // If icons are above/below token, static vertical (y) offset but dynamic horizontal offset (x) based on current icon
     if (iconPosition === "above" || iconPosition === "below") {
-        const x0 = (tokenWidth - 3 * iconSize) / 2; // horizontal space between icons
-        const xArray = [0, iconSize + x0, 2 * (iconSize + x0)]; // left-end start points of icons
+        const x0 = (tokenWidth - 4 * iconSize) / 2; // horizontal space between icons
+        const xArray = [0, iconSize + x0, 2 * (iconSize + x0), 3 * (iconSize + x0)]; // left-end start points of icons
         x = xArray[currentIconIndex];
 
         y = iconPosition === "above"
@@ -29,8 +29,8 @@ export function containerPosition(currentIconIndex, tokenWidth, tokenHeight) {
             ? (iconAlignment === "outside" ? -iconSize - 4 : 0)
             : (iconAlignment === "outside" ? tokenWidth + 4 : tokenWidth - iconSize);
 
-        const y0 = (tokenHeight - 3 * iconSize) / 2; // vertical space between icons
-        const yArray = [0, iconSize + y0, 2 * (iconSize + y0)] // top-side start points of icons
+        const y0 = (tokenHeight - 4 * iconSize) / 2; // vertical space between icons
+        const yArray = [0, iconSize + y0, 2 * (iconSize + y0), 3 * (iconSize + y0)] // top-side start points of icons
         y = yArray[currentIconIndex];
     }
 

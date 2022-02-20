@@ -1,14 +1,18 @@
-![All Downloads](https://img.shields.io/github/downloads/jessev14/resource-icons/total?style=for-the-badge)
+![All Downloads](https://img.shields.io/github/downloads/tues/fvtt-resource-icons/total?style=for-the-badge)
 
-![Latest Release Download Count](https://img.shields.io/github/downloads/jessev14/resource-icons/latest/RI.zip)
-[![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Fresource-icons&colorB=4aa94a)](https://forge-vtt.com/bazaar#package=resource-icons)
+![Latest Release Download Count](https://img.shields.io/github/downloads/tues/fvtt-resource-icons/latest/RI.zip)
 
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/jessev14)
+# Resource Icons x4
 
+Resource Icons x4 is a Foundry VTT module that adds 4 customizable icons to tokens to track resources.
 
-# Resource Icons
+## Fork
 
-Resource Icons is a Foundry VTT module that adds customizable icons to tokens to track resources.
+This is a fork I made quickly to allow having 4 icons instead of 3 because the system we play with my group nowadays has 4 basic resources. I don't intend to maintain this long-term except making sure it suits my group's needs, so please don't rely on this fork unless you know what you're doing.
+
+Thanks to [Jesse Vo](https://github.com/jessev14) for creating the [original module](https://github.com/jessev14/resource-icons).
+
+## Screenshot (from the original version with 3 icons)
 
 <img src="/img/demo.png" width="500"/>
 
@@ -28,6 +32,6 @@ The border shape (circle/square), where the resource icons are anchored (above/b
 
 ## Technical Notes
 
-Resource Icons patches (via lib-wrapper) `CONFIG.Token.objectClass.prototype.draw` to implement resource icon drawing. This drawing is handled by a new method added to the Token object class: `drawResourceIcons`. This method adds three PIXI container children to the token. Each of these PIXI containers themselves are assigned three PIXI children (based on resource icon configuration): background (which encompasses border), icon image, and value text.
+Resource Icons patches (via lib-wrapper) `CONFIG.Token.objectClass.prototype.draw` to implement resource icon drawing. This drawing is handled by a new method added to the Token object class: `drawResourceIcons`. This method adds four PIXI container children to the token. Each of these PIXI containers themselves are assigned three PIXI children (based on resource icon configuration): background (which encompasses border), icon image, and value text.
 
 Resource Icons also patches `CONFIG.Token.objectClass.prototype._onUpdate` to handle changes to resource icon configuration (in which case `drawResourceIcons` is called to re-draw the icons) and to handle changes to resoure values when a token's actor is updated. This updated is handled by another new method added to the Token object class: `updateResourceIconValues`. This method simply changes the value text child of each PIXI container to the new value of the assigned resource.
